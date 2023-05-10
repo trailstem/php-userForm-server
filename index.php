@@ -40,19 +40,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // プリペアードステートメントを実行
   if ($stmt->execute()) {
-    echo "New record created successfully";
+    http_response_code(200);
+    header('Content-Type: application/json');
+    $response = array('message' => 'ユーザ登録に成功しました。');
+    echo json_encode($response, JSON_UNESCAPED_UNICODE);
   } else {
-    echo "Error: " . $stmt->error;
+    http_response_code(500);
+    header('Content-Type: application/json');
+    $response = array('message' => 'ユーザー登録に失敗しました');
+    echo json_encode($response, JSON_UNESCAPED_UNICODE);
   }
+
   // MySQLから切断する
   $stmt->close();
   $conn->close();
-
-
-
-  // JSON形式でクライアントに返す
-  // HTTPステータスコードを追加
-  http_response_code(200);
-  header('Content-Type: application/json');
-  echo json_encode($data, JSON_UNESCAPED_UNICODE);
 }
